@@ -1,85 +1,147 @@
 :root {
-  color-scheme: light dark;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--apex-font-family-sans);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  background: var(--apex-color-background, #f7f8f5);
-  color: var(--apex-color-foreground, #1b211b);
+  background: var(--apex-color-canvas);
+  color: var(--apex-color-text);
 }
 
-.demo-shell {
+.app-shell {
   min-height: 100vh;
-  padding: 24px;
-  background:
-    radial-gradient(circle at top left, color-mix(in oklch, var(--apex-color-primary, #5f7d3a) 18%, transparent), transparent 34rem),
-    linear-gradient(135deg, color-mix(in oklch, var(--apex-color-surface, #f7f8f5) 94%, var(--apex-color-primary, #5f7d3a)), var(--apex-color-background, #f7f8f5));
+  background: var(--apex-color-canvas);
+  color: var(--apex-color-text);
 }
 
-.demo-frame {
-  max-width: 1180px;
-  margin: 0 auto;
+.app-main {
   display: grid;
-  gap: 20px;
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+  gap: var(--apex-space-6);
+  padding: var(--apex-space-6);
 }
 
-.demo-nav,
-.demo-panel,
-.demo-hero,
-.demo-grid,
-.demo-workspace {
-  animation: rise 220ms ease-out both;
+.app-nav {
+  position: sticky;
+  top: var(--apex-space-6);
+  align-self: start;
 }
 
-.demo-hero {
+.app-page {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
-  gap: 18px;
+  gap: var(--apex-space-8);
+  min-width: 0;
+}
+
+.app-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.65fr);
+  gap: var(--apex-space-6);
   align-items: stretch;
 }
 
-.demo-panel {
-  border: 1px solid var(--apex-color-border, #d8dece);
-  background: color-mix(in oklch, var(--apex-color-surface, #f8faf6) 94%, transparent);
-  border-radius: 8px;
-  padding: 18px;
-  box-shadow: 0 18px 48px color-mix(in oklch, var(--apex-color-foreground, #182018) 12%, transparent);
+.app-hero-copy {
+  display: grid;
+  align-content: center;
+  min-width: 0;
 }
 
-.demo-grid {
+.app-hero-panel {
+  min-width: 0;
+}
+
+.app-kpis,
+.app-grid {
   display: grid;
+  gap: var(--apex-space-5);
+}
+
+.app-kpis {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
 }
 
-.demo-workspace {
+.app-grid-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-grid-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.app-section {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 16px;
+  gap: var(--apex-space-5);
+  scroll-margin-top: var(--apex-space-8);
 }
 
-.demo-stack { display: grid; gap: 12px; }
-.demo-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.demo-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.demo-list li { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
-.demo-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.demo-kpi { padding: 12px; border: 1px solid var(--apex-color-border); border-radius: 8px; background: var(--apex-color-surface); }
-.demo-kpi strong { display: block; font-size: 1.4rem; line-height: 1.1; }
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+.section-heading {
+  display: grid;
+  max-width: 72ch;
+  gap: var(--apex-space-2);
 }
 
-@media (max-width: 860px) {
-  .demo-shell { padding: 14px; }
-  .demo-hero, .demo-grid, .demo-workspace { grid-template-columns: 1fr; }
-  .demo-kpis { grid-template-columns: 1fr; }
+.app-actions,
+.app-inline,
+.metric-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .demo-nav, .demo-panel, .demo-hero, .demo-grid, .demo-workspace { animation: none; }
+.app-actions {
+  gap: var(--apex-space-3);
+}
+
+.app-inline {
+  gap: var(--apex-space-2);
+}
+
+.metric-row {
+  gap: var(--apex-space-4);
+}
+
+.compact {
+  gap: var(--apex-space-3);
+}
+
+@media (max-width: 1180px) {
+  .app-grid-four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 920px) {
+  .app-main,
+  .app-hero,
+  .app-kpis,
+  .app-grid-two,
+  .app-grid-four {
+    grid-template-columns: 1fr;
+  }
+
+  .app-main {
+    padding: var(--apex-space-4);
+  }
+
+  .app-nav {
+    position: static;
+  }
+
+  .app-hero-copy {
+    padding: var(--apex-space-6);
+  }
+}
+
+@media (max-width: 560px) {
+  .app-main {
+    padding: var(--apex-space-3);
+  }
+
+  .app-hero-copy {
+    padding: var(--apex-space-5);
+  }
 }
