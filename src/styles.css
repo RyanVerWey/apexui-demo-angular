@@ -35,6 +35,17 @@ p {
   color: var(--apex-color-text);
 }
 
+.app-shell apex-app-bar {
+  display: block;
+}
+
+.app-shell .apex-app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-radius: 0;
+}
+
 .app-actions,
 .button-row,
 .contact-row,
@@ -231,6 +242,8 @@ apex-workflow-board {
 .metric-grid,
 .contact-grid,
 .split-grid,
+.dashboard-insights-grid,
+.dashboard-data-grid,
 .form-layout,
 .form-grid {
   display: grid;
@@ -244,6 +257,72 @@ apex-workflow-board {
 
 .metric-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.metric-grid apex-card {
+  min-height: 8.5rem;
+}
+
+.dashboard-insights-grid {
+  grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.65fr);
+  align-items: stretch;
+}
+
+.dashboard-data-grid {
+  grid-template-columns: minmax(0, 1.3fr) minmax(20rem, 0.7fr);
+  align-items: start;
+}
+
+.dashboard-workflow-card,
+.dashboard-workflow-card apex-card {
+  min-width: 0;
+}
+
+.dashboard-workflow-card .apex-card {
+  overflow: hidden;
+}
+
+.dashboard-workflow-card .apex-workflow-board {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--apex-space-3);
+}
+
+.dashboard-workflow-card .apex-workflow-column {
+  min-width: 0;
+}
+
+.dashboard-workflow-card .apex-workflow-item {
+  min-width: 0;
+}
+
+.dashboard-workflow-card .apex-workflow-column-title,
+.dashboard-workflow-card .apex-workflow-item-title,
+.dashboard-workflow-card .apex-workflow-item-meta {
+  overflow-wrap: anywhere;
+}
+
+.signal-list {
+  display: grid;
+  gap: var(--apex-space-4);
+}
+
+.signal-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--apex-space-2) var(--apex-space-4);
+  align-items: center;
+}
+
+.signal-row span {
+  color: var(--apex-color-muted);
+}
+
+.signal-row strong {
+  color: var(--apex-color-text);
+}
+
+.signal-row apex-progress {
+  grid-column: 1 / -1;
 }
 
 .contact-grid {
@@ -346,10 +425,15 @@ apex-workflow-board {
   padding: var(--apex-space-2);
   font-size: var(--apex-font-size-xs);
   text-align: center;
+  white-space: nowrap;
 }
 
 @media (max-width: 1180px) {
   .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-workflow-card .apex-workflow-board {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -364,6 +448,8 @@ apex-workflow-board {
   .hero-page,
   .split-grid,
   .split-grid.wide-left,
+  .dashboard-insights-grid,
+  .dashboard-data-grid,
   .form-layout,
   .proof-strip {
     grid-template-columns: 1fr;
@@ -375,6 +461,10 @@ apex-workflow-board {
 
   .app-frame {
     padding: var(--apex-space-4);
+  }
+
+  .app-shell {
+    padding-bottom: 4.5rem;
   }
 
   .mobile-nav {
@@ -390,6 +480,7 @@ apex-workflow-board {
   .metric-grid,
   .feature-grid,
   .contact-grid,
+  .dashboard-workflow-card .apex-workflow-board,
   .form-grid {
     grid-template-columns: 1fr;
   }
@@ -407,5 +498,42 @@ apex-workflow-board {
 
   .button-link {
     width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-shell .apex-app-bar {
+    grid-template-columns: 1fr;
+    gap: var(--apex-space-3);
+    align-items: stretch;
+  }
+
+  .app-shell .apex-app-bar-main,
+  .app-shell .apex-app-bar-actions {
+    justify-content: space-between;
+  }
+
+  .app-shell .apex-app-bar-nav {
+    display: none;
+  }
+
+  .app-actions {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .app-actions apex-switch {
+    justify-self: end;
+  }
+
+  .mobile-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow-x: visible;
+  }
+
+  .mobile-nav a {
+    min-width: 0;
+    white-space: normal;
   }
 }

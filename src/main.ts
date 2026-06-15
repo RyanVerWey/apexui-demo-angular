@@ -161,17 +161,41 @@ class HomePageComponent {
       </apex-card>
     </section>
 
-    <section class="split-grid wide-left">
+    <section class="dashboard-insights-grid">
       <apex-card eyebrow="Capacity" heading="Work by line of service">
         <apex-chart label="Service demand by team" [data]="chartData"></apex-chart>
       </apex-card>
-      <apex-card eyebrow="Status" heading="Dispatch lanes">
+
+      <apex-card eyebrow="Readiness" heading="Regional operating signals">
+        <div class="signal-list" aria-label="Regional readiness signals">
+          <div *ngFor="let signal of signals" class="signal-row">
+            <span>{{ signal.label }}</span>
+            <strong>{{ signal.value }}</strong>
+            <apex-progress [label]="signal.label" [value]="signal.progress"></apex-progress>
+          </div>
+        </div>
+      </apex-card>
+    </section>
+
+    <section class="dashboard-workflow-card">
+      <apex-card eyebrow="Workflow" heading="Dispatch lanes">
         <apex-workflow-board [columns]="workflowColumns"></apex-workflow-board>
       </apex-card>
     </section>
 
-    <section class="section-band no-pad">
-      <apex-data-table caption="High priority work orders" [columns]="workColumns" [rows]="workRows"></apex-data-table>
+    <section class="dashboard-data-grid">
+      <div class="section-band no-pad">
+        <apex-data-table caption="High priority work orders" [columns]="workColumns" [rows]="workRows"></apex-data-table>
+      </div>
+
+      <apex-card eyebrow="Closeout quality" heading="Today at a glance">
+        <apex-stack gap="md">
+          <div class="record-line"><span>Open orders</span><strong>128</strong></div>
+          <div class="record-line"><span>Crews active</span><strong>18</strong></div>
+          <div class="record-line"><span>Protected SLA</span><strong>94%</strong></div>
+          <apex-timeline [events]="timelineEvents"></apex-timeline>
+        </apex-stack>
+      </apex-card>
     </section>
   `
 })
@@ -190,11 +214,23 @@ class DashboardPageComponent {
     { label: "Install", value: 27 }
   ];
 
+  signals = [
+    { label: "North region ready", value: "88%", progress: 88 },
+    { label: "Parts staged", value: "82%", progress: 82 },
+    { label: "First visit fix", value: "78%", progress: 78 }
+  ];
+
   workflowColumns = [
-    { title: "New", items: [{ title: "Cooling outage", meta: "Granite Ridge" }, { title: "Panel fault", meta: "HarborWorks" }] },
-    { title: "In route", items: [{ title: "Dock sensor", meta: "Summit Cold" }, { title: "Roof unit", meta: "North clinic" }] },
-    { title: "Needs approval", items: [{ title: "Compressor swap", meta: "$7,900 quote" }] },
-    { title: "Complete", items: [{ title: "Generator test", meta: "Signed 10:42" }] }
+    { title: "Intake", items: [{ title: "Cooling outage", meta: "Granite Ridge" }, { title: "Panel fault", meta: "HarborWorks" }] },
+    { title: "Scheduled", items: [{ title: "Dock sensor", meta: "Summit Cold" }, { title: "Roof unit", meta: "North clinic" }] },
+    { title: "Approval", items: [{ title: "Compressor swap", meta: "$7,900 quote" }] },
+    { title: "Closed", items: [{ title: "Generator test", meta: "Signed 10:42" }] }
+  ];
+
+  timelineEvents = [
+    { label: "Parts desk", description: "Three critical kits staged before 10:00.", meta: "08:45" },
+    { label: "Dispatch sync", description: "Crew B moved to Summit Cold after approval.", meta: "10:20" },
+    { label: "Closeout", description: "Generator load test signed by facilities lead.", meta: "12:10" }
   ];
 
   workColumns = [
@@ -585,7 +621,6 @@ const routes = [
   template: `
     <main class="app-shell" [attr.data-apex-theme]="theme">
       <apex-app-bar heading="Northstar Field Services">
-        <apex-breadcrumbs slot="navigation" label="Workspace path" [items]="breadcrumbs"></apex-breadcrumbs>
         <div slot="actions" class="app-actions">
           <apex-badge tone="info">{{ theme }}</apex-badge>
           <apex-switch label="Dark mode" [checked]="isDark" (apexChange)="setTheme($event)"></apex-switch>
