@@ -12,6 +12,8 @@ class AppComponent {
 }
 bootstrapApplication(AppComponent).then(() => {
   if (typeof window !== "undefined") {
-    import("@apexui/web-components/loader").then(({ defineCustomElements }) => defineCustomElements());
+    Promise.all([import('@apexui/web-components/components/apex-alert.js'), import('@apexui/web-components/components/apex-app-bar.js'), import('@apexui/web-components/components/apex-badge.js'), import('@apexui/web-components/components/apex-button.js'), import('@apexui/web-components/components/apex-card.js'), import('@apexui/web-components/components/apex-chart.js'), import('@apexui/web-components/components/apex-data-table.js'), import('@apexui/web-components/components/apex-date-picker.js'), import('@apexui/web-components/components/apex-progress.js'), import('@apexui/web-components/components/apex-stack.js'), import('@apexui/web-components/components/apex-switch.js'), import('@apexui/web-components/components/apex-text-field.js'), import('@apexui/web-components/components/apex-timeline.js'), import('@apexui/web-components/components/apex-typography.js')]);
   }
 });
+
+
