@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "projects": {
+    "apexui-demo-angular": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/apexui-demo-angular",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+              "styles": [
+                "src/styles.css"
+              ],
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false
+                }
+              }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "apexui-demo-angular:build"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "apexui-demo-angular",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ng serve --host 127.0.0.1",
+    "build": "ng build --base-href /apexui-demo-angular/"
+  },
+  "dependencies": {
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular-devkit/build-angular": "^20.0.0",
+    "@angular/cli": "^20.0.0",
+    "@apexui/angular": "0.1.0",
+    "@apexui/web-components": "0.1.0",
+    "@apexui/tokens": "0.1.0",
+    "rxjs": "^7.8.0",
+    "typescript": "^5.8.3",
+    "zone.js": "^0.15.0"
+  },
+  "devDependencies": {}
+}
