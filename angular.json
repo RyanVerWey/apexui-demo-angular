@@ -14,6 +14,7 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
               "styles": [
+                "node_modules/@apexui/tokens/dist/tokens.css",
                 "src/styles.css"
               ],
               "optimization": {
