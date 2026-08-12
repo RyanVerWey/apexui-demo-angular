@@ -176,7 +176,7 @@ const serviceRecordColumns = [
                 </apex-card>
               </section>
 
-              <apex-card eyebrow="Route health" heading="Open work order queue">
+              <apex-card eyebrow="Live queue" heading="Route health">
                 <apex-data-grid
                   caption="Open work order queue"
                   [attr.columns]="routeColumnsJson"
