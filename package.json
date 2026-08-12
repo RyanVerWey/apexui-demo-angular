@@ -8,17 +8,21 @@
     "build": "ng build --base-href /apexui-demo-angular/"
   },
   "dependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/compiler": "^20.0.0",
-    "@angular/core": "^20.0.0",
-    "@angular/platform-browser": "^20.0.0",
-    "@angular-devkit/build-angular": "^20.0.0",
-    "@angular/cli": "^20.0.0",
-    "@apexui/web-components": "file:vendor/apexui/apexui-web-components-0.1.1.tgz",
+    "@angular/build": "^22.1.3",
+    "@angular/cli": "^22.1.3",
+    "@angular/common": "^22.1.1",
+    "@angular/compiler": "^22.1.1",
+    "@angular/compiler-cli": "^22.1.1",
+    "@angular/core": "^22.1.1",
+    "@angular/platform-browser": "^22.1.1",
     "@apexui/tokens": "file:vendor/apexui/apexui-tokens-0.1.1.tgz",
+    "@apexui/web-components": "file:vendor/apexui/apexui-web-components-0.1.1.tgz",
     "rxjs": "^7.8.0",
-    "typescript": "^5.8.3",
+    "typescript": "~6.0.3",
     "zone.js": "^0.15.0"
   },
-  "devDependencies": {}
+  "overrides": {
+    "@hono/node-server": "^2.0.5",
+    "@modelcontextprotocol/sdk": "1.30.0"
+  }
 }

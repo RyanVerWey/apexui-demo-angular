@@ -7,7 +7,7 @@
       "sourceRoot": "src",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist/apexui-demo-angular",
             "index": "src/index.html",
@@ -25,7 +25,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "apexui-demo-angular:build"
           }

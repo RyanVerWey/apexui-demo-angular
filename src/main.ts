@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
-import "@apexui/tokens/css";
 import { defineCustomElements } from "@apexui/web-components/loader";
 import "zone.js";
 
