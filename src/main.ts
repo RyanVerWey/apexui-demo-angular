@@ -6,14 +6,15 @@ import "zone.js";
 
 defineCustomElements();
 
-type RoutePath = "/" | "/analytics" | "/customers" | "/workflows" | "/settings" | "/about";
+type RoutePath = "/" | "/analytics" | "/work-orders" | "/customers" | "/data-table" | "/settings" | "/about";
 type SwitchEvent = CustomEvent<{ checked: boolean }>;
 
 const routes: Array<{ path: RoutePath; label: string; icon: string; title: string }> = [
   { path: "/", label: "Home", icon: "home", title: "Kentro" },
   { path: "/analytics", label: "Analytics", icon: "bar-chart-3", title: "Analytics" },
+  { path: "/work-orders", label: "Work orders", icon: "clipboard-list", title: "Work orders" },
   { path: "/customers", label: "Customers", icon: "users", title: "Customers" },
-  { path: "/workflows", label: "Workflows", icon: "workflow", title: "Workflows" },
+  { path: "/data-table", label: "Data table", icon: "table", title: "Data table" },
   { path: "/settings", label: "Settings", icon: "settings", title: "Settings" },
   { path: "/about", label: "About", icon: "info", title: "About" }
 ];
@@ -37,6 +38,24 @@ const routeColumns = [
   { key: "sla", header: "SLA", sortable: true, filterable: true }
 ];
 
+const serviceRecordRows = [
+  { account: "Aster Foods", region: "North Loop", owner: "Maya Chen", priority: "High", status: "Scheduled", window: "09:00-11:00" },
+  { account: "Briar Commons", region: "Lakeview", owner: "Omar Haddad", priority: "Critical", status: "Needs parts", window: "11:30-14:00" },
+  { account: "Cobalt Labs", region: "West Yard", owner: "Elena Rossi", priority: "Normal", status: "On route", window: "13:00-15:00" },
+  { account: "Dover Hotel Group", region: "Harbor", owner: "Nina Patel", priority: "High", status: "Approval", window: "15:00-17:00" },
+  { account: "Evergreen Bank", region: "Uptown", owner: "Theo Brooks", priority: "Normal", status: "Closed", window: "08:00-10:00" },
+  { account: "Foundry Works", region: "South Plant", owner: "Ana Silva", priority: "Critical", status: "Triage", window: "10:30-12:30" }
+];
+
+const serviceRecordColumns = [
+  { key: "account", header: "Account", sortable: true, filterable: true },
+  { key: "region", header: "Region", sortable: true, filterable: true },
+  { key: "owner", header: "Owner", sortable: true, filterable: true },
+  { key: "priority", header: "Priority", sortable: true, filterable: true },
+  { key: "status", header: "Status", sortable: true, filterable: true },
+  { key: "window", header: "Window", sortable: true, filterable: true }
+];
+
 @Component({
   selector: "app-root",
   standalone: true,
@@ -44,83 +63,82 @@ const routeColumns = [
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <main class="site-shell" [attr.data-apex-theme]="theme">
-      <apex-app-bar heading="Kentro">
-        <div slot="actions" class="app-actions">
-          <apex-badge tone="info">Angular</apex-badge>
-          <apex-switch label="Dark mode" [checked]="isDark" (apexChange)="setTheme($event)"></apex-switch>
+      <header class="site-header">
+        <a class="brand-lockup" [href]="hrefFor('/')" (click)="navigate($event, '/')" aria-label="Kentro home">
+          <span class="brand-mark"><apex-icon name="navigation" size="sm"></apex-icon></span>
+          <span>
+            <strong>Kentro</strong>
+            <small>Operations</small>
+          </span>
+        </a>
+
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <a *ngFor="let item of navItems" [href]="hrefFor(item.path)" [class.nav-link-active]="activePath === item.path" class="nav-link" (click)="navigate($event, item.path)">
+            {{ item.label }}
+          </a>
+        </nav>
+
+        <div class="header-actions">
+          <a class="action-link secondary compact-link" [href]="hrefFor('/customers')" (click)="navigate($event, '/customers')">Customer portal</a>
+          <a class="action-link primary compact-link" [href]="hrefFor('/work-orders')" (click)="navigate($event, '/work-orders')">Book service</a>
+          <apex-switch label="Dark" [checked]="isDark" (apexChange)="setTheme($event)"></apex-switch>
         </div>
-      </apex-app-bar>
+      </header>
 
-      <div class="site-frame">
-        <aside class="side-nav" aria-label="Primary">
-          <div class="brand-panel">
-            <apex-icon name="workflow" size="lg"></apex-icon>
-            <div>
-              <strong>Kentro Ops</strong>
-              <span>Concept token demo</span>
-            </div>
-          </div>
-          <nav>
-            <a *ngFor="let item of navItems" [href]="hrefFor(item.path)" [class.active]="activePath === item.path" (click)="navigate($event, item.path)">
-              <apex-icon [attr.name]="item.icon" size="sm"></apex-icon>
-              <span>{{ item.label }}</span>
-            </a>
-          </nav>
-          <apex-alert tone="success" heading="Live package proof">
-            Concept tokens, ApexGrid, DataGrid, forms, charts, and workflow surfaces render through Angular custom elements.
-          </apex-alert>
-        </aside>
-
-        <section class="page-surface">
+      <div class="route-shell">
+        <section class="route-panel" [attr.aria-label]="activeLabel + ' page'">
           <apex-breadcrumbs [attr.items]="breadcrumbsJson"></apex-breadcrumbs>
 
           <ng-container [ngSwitch]="activePath">
             <section *ngSwitchCase="'/'" class="route-page home-page">
-              <section class="hero-band" aria-labelledby="home-title">
+              <section class="hero-page" aria-labelledby="home-title">
                 <div class="hero-copy">
-                  <apex-stack gap="md">
-                    <apex-badge tone="info">Regional operating system</apex-badge>
-                    <apex-typography id="home-title" as="h1" variant="display">Kentro operations desk</apex-typography>
-                    <p>Plan field capacity, monitor customer commitments, and recover risky work before the day slips.</p>
+                  <apex-stack gap="lg">
+                    <apex-typography id="home-title" as="h1" variant="display">Field service that feels calm before the crew arrives.</apex-typography>
+                    <p>Kentro coordinates commercial maintenance, emergency dispatch, customer approvals, and executive reporting from one operating system.</p>
                     <div class="button-row">
-                      <a class="action-link primary" [href]="hrefFor('/analytics')" (click)="navigate($event, '/analytics')">Open analytics</a>
-                      <a class="action-link secondary" [href]="hrefFor('/workflows')" (click)="navigate($event, '/workflows')">Review workflows</a>
+                      <a class="action-link primary" [href]="hrefFor('/work-orders')" (click)="navigate($event, '/work-orders')">Book a service visit</a>
+                      <a class="action-link secondary" [href]="hrefFor('/analytics')" (click)="navigate($event, '/analytics')">View live metrics</a>
                     </div>
                   </apex-stack>
                 </div>
-                <apex-card eyebrow="Today" heading="Readiness snapshot">
+                <apex-card eyebrow="Today at Kentro" heading="Readiness snapshot">
                   <apex-stack gap="md">
-                    <apex-progress label="Crew coverage" value="92"></apex-progress>
-                    <apex-progress label="Parts staged" value="84"></apex-progress>
-                    <apex-progress label="Closeout quality" value="88"></apex-progress>
+                    <apex-chart label="Service mix" [attr.data]="serviceMixChartJson"></apex-chart>
+                    <div class="metric-band">
+                      <article class="metric-card"><span>Open orders</span><strong>128</strong></article>
+                      <article class="metric-card"><span>First-time fix</span><strong>94%</strong></article>
+                      <article class="metric-card"><span>At-risk sites</span><strong>7</strong></article>
+                    </div>
                   </apex-stack>
                 </apex-card>
               </section>
 
-              <apex-grid columns="three" gap="lg" align="stretch" class="metric-grid">
-                <apex-card *ngFor="let metric of homeMetrics" [attr.eyebrow]="metric.eyebrow" [attr.heading]="metric.heading" fill>
-                  <strong class="metric-value">{{ metric.value }}</strong>
-                  <span>{{ metric.copy }}</span>
-                </apex-card>
-              </apex-grid>
+              <section class="trust-band" aria-label="Customer proof">
+                <span>Trusted by regional facilities teams</span>
+                <strong>Aster Foods</strong>
+                <strong>Briar Commons</strong>
+                <strong>Cobalt Labs</strong>
+                <strong>Dover Hotel Group</strong>
+              </section>
 
-              <section class="split-grid">
-                <apex-card eyebrow="Operating rhythm" heading="Morning standup">
-                  <apex-timeline [attr.events]="timelineJson"></apex-timeline>
+              <section class="story-grid">
+                <apex-card eyebrow="Response" heading="Book urgent work without calling dispatch">
+                  <p>Customers can request service, upload logs, pick dates, and track status through one branded experience.</p>
                 </apex-card>
-                <apex-card eyebrow="Components in use" heading="A real product screen">
-                  <div class="chip-list">
-                    <apex-chip *ngFor="let chip of componentChips">{{ chip }}</apex-chip>
-                  </div>
+                <apex-card eyebrow="Operations" heading="Managers see the route plan before it breaks">
+                  <p>Dashboards combine work orders, crew load, SLA risk, and account health in one operations surface.</p>
+                </apex-card>
+                <apex-card eyebrow="Proof" heading="Every page exercises ApexUI in context">
+                  <p>Marketing, metrics, forms, records, settings, and package proof share the same token system.</p>
                 </apex-card>
               </section>
             </section>
 
             <section *ngSwitchCase="'/analytics'" class="route-page analytics-page">
               <header class="page-heading">
-                <apex-badge tone="info">Analytics dashboard</apex-badge>
-                <apex-typography as="h1" variant="display">Operating signals</apex-typography>
-                <p>Leaders can scan capacity, route risk, revenue protection, and SLA trends in one dense view.</p>
+                <apex-typography as="h1" variant="display">Operations command center</apex-typography>
+                <p>Real route density: crew load, SLA risk, customer health, and work-order evidence in one dashboard.</p>
               </header>
 
               <apex-grid columns="four" gap="md" align="stretch" class="metric-grid compact">
@@ -130,37 +148,55 @@ const routeColumns = [
                 </apex-card>
               </apex-grid>
 
-              <section class="dashboard-grid">
-                <apex-card eyebrow="Demand" heading="Coverage by region">
-                  <apex-chart label="Crew coverage by region" [attr.data]="coverageChartJson"></apex-chart>
+              <section class="dashboard-visual-grid">
+                <apex-card eyebrow="Dispatch" heading="Dispatch health">
+                  <apex-chart label="Weekly dispatch completion" [attr.data]="dispatchChartJson"></apex-chart>
                 </apex-card>
-                <apex-card eyebrow="Revenue" heading="Protected pipeline">
-                  <apex-chart label="Revenue protected this week" [attr.data]="revenueChartJson"></apex-chart>
+                <apex-card eyebrow="Capacity" heading="Regional load">
+                  <apex-chart label="Regional scheduled capacity" [attr.data]="coverageChartJson"></apex-chart>
+                </apex-card>
+                <apex-card eyebrow="SLA" heading="Risk mix">
+                  <apex-chart label="Open SLA risk by cause" [attr.data]="riskChartJson"></apex-chart>
+                </apex-card>
+                <apex-card eyebrow="Health" heading="Customer health">
+                  <apex-chart label="Customer health by segment" [attr.data]="healthChartJson"></apex-chart>
                 </apex-card>
               </section>
 
-              <apex-card eyebrow="Route health" heading="Sortable dispatch queue">
+              <section class="dashboard-shell">
+                <apex-card eyebrow="Crew" heading="Crew utilization">
+                  <apex-chart label="Crew utilization" [attr.data]="crewChartJson"></apex-chart>
+                </apex-card>
+                <apex-card eyebrow="Territory" heading="Territory watchlist">
+                  <ul class="proof-list">
+                    <li><strong>North Loop</strong><span>Crew A has three stops and one SLA watch.</span></li>
+                    <li><strong>Lakeview</strong><span>Crew B cleared after customer approval.</span></li>
+                    <li><strong>West Yard</strong><span>Parts hold blocks a critical closeout.</span></li>
+                  </ul>
+                </apex-card>
+              </section>
+
+              <apex-card eyebrow="Route health" heading="Open work order queue">
                 <apex-data-grid
-                  caption="Route health queue"
+                  caption="Open work order queue"
                   [attr.columns]="routeColumnsJson"
                   [attr.rows]="routeRowsJson"
                   sortable
                   filterable
                   pageable
-                  page-size="4"
+                  page-size="3"
                 ></apex-data-grid>
               </apex-card>
             </section>
 
             <section *ngSwitchCase="'/customers'" class="route-page customers-page">
               <header class="page-heading">
-                <apex-badge tone="success">Customer operations</apex-badge>
-                <apex-typography as="h1" variant="display">Accounts and service memory</apex-typography>
-                <p>Account teams see open revenue, site health, risk notes, and field history without leaving operations.</p>
+                <apex-typography as="h1" variant="display">Account pipeline and health records</apex-typography>
+                <p>A customer operations page with searchable records, structured data, and next-best action states.</p>
               </header>
 
               <apex-toolbar label="Customer tools" density="comfortable" wrap>
-                <apex-search-form label="Search accounts" placeholder="Search customers"></apex-search-form>
+                <apex-search-form label="Search accounts" placeholder="Search account, plan, owner"></apex-search-form>
                 <apex-button variant="secondary">Export CSV</apex-button>
                 <apex-button>Add account</apex-button>
               </apex-toolbar>
@@ -196,35 +232,76 @@ const routeColumns = [
               </section>
             </section>
 
-            <section *ngSwitchCase="'/workflows'" class="route-page workflows-page">
+            <section *ngSwitchCase="'/data-table'" class="route-page data-table-page">
               <header class="page-heading">
-                <apex-badge tone="warning">Workflow center</apex-badge>
-                <apex-typography as="h1" variant="display">Dispatch lanes</apex-typography>
-                <p>Supervisors can review work order stages, escalate blocked jobs, and keep intake quality visible.</p>
+                <apex-typography as="h1" variant="display">Service records data table</apex-typography>
+                <p>A routed data-table page proving ApexUI DataGrid sorting, filtering, and paging in Angular.</p>
               </header>
+
+              <apex-toolbar label="Data table controls" density="comfortable" wrap>
+                <apex-search-form label="Find service record" placeholder="Use column filters below for scoped search"></apex-search-form>
+                <apex-button variant="secondary">Export CSV</apex-button>
+                <apex-button>Save view</apex-button>
+              </apex-toolbar>
+
+              <section class="split-grid wide-left">
+                <apex-card eyebrow="Grid" heading="Service record queue">
+                  <apex-data-grid
+                    caption="Service record queue"
+                    [attr.columns]="serviceRecordColumnsJson"
+                    [attr.rows]="serviceRecordRowsJson"
+                    sortable
+                    filterable
+                    pageable
+                    page-size="3"
+                  ></apex-data-grid>
+                </apex-card>
+                <div class="insight-column">
+                  <apex-card eyebrow="Proof" heading="Grid behavior">
+                    <ul class="proof-list">
+                      <li><strong>One-line sorting</strong><span>Enabled with the sortable flag.</span></li>
+                      <li><strong>Column filters</strong><span>Enabled with the filterable flag.</span></li>
+                      <li><strong>Paging</strong><span>Enabled with pageable and page-size.</span></li>
+                    </ul>
+                  </apex-card>
+                  <apex-card eyebrow="Package" heading="Angular custom elements">
+                    <p>This page uses ApexUI Stencil components through Angular CUSTOM_ELEMENTS_SCHEMA.</p>
+                  </apex-card>
+                </div>
+              </section>
+            </section>
+
+            <section *ngSwitchCase="'/work-orders'" class="route-page work-orders-page">
+              <header class="page-heading">
+                <apex-typography as="h1" variant="display">Create a service visit</apex-typography>
+                <p>A realistic intake page with typed fields, route selection, urgency, attachment, and dispatch confidence.</p>
+              </header>
+
+              <section class="split-grid">
+                <apex-card eyebrow="Request intake" heading="Service details">
+                  <div class="form-grid">
+                    <apex-text-field label="Customer" value="Aster Foods"></apex-text-field>
+                    <apex-text-field label="Asset" value="Rooftop unit 14"></apex-text-field>
+                    <apex-select label="Service type" [attr.options]="serviceTypeOptionsJson" value="maintenance"></apex-select>
+                    <apex-date-picker label="Requested date" value="2026-08-14"></apex-date-picker>
+                    <apex-textarea label="Technician notes" rows="4" value="Customer reports intermittent alarm after compressor cycle."></apex-textarea>
+                    <apex-checkbox label="Notify customer when crew is assigned" checked></apex-checkbox>
+                  </div>
+                </apex-card>
+                <apex-card eyebrow="Dispatch controls" heading="Route plan">
+                  <div class="form-grid single-column">
+                    <apex-select label="Priority" [attr.options]="priorityOptionsJson" value="high"></apex-select>
+                    <apex-number-field label="Crew size" value="2" min="1" max="8"></apex-number-field>
+                    <apex-slider label="Dispatch confidence" value="72" min="0" max="100"></apex-slider>
+                    <apex-alert tone="info" heading="Routing note">Crew assignment updates the customer timeline and route board.</apex-alert>
+                    <apex-button>Create work order</apex-button>
+                  </div>
+                </apex-card>
+              </section>
 
               <apex-card eyebrow="Kanban" heading="Daily work movement">
                 <apex-workflow-board [attr.columns]="workflowColumnsJson"></apex-workflow-board>
               </apex-card>
-
-              <section class="split-grid">
-                <apex-card eyebrow="Intake quality" heading="New service request">
-                  <div class="form-grid">
-                    <apex-text-field label="Work summary" value="North loading dock sensor fault"></apex-text-field>
-                    <apex-select label="Priority" [attr.options]="priorityOptionsJson" value="high"></apex-select>
-                    <apex-date-picker label="Requested date" value="2026-08-14"></apex-date-picker>
-                    <apex-number-field label="Labor hours" value="4" min="1" max="16"></apex-number-field>
-                    <apex-textarea label="Technician notes" rows="4" value="Gate code expires at 16:00. Ask for Maribel at receiving."></apex-textarea>
-                    <apex-checkbox label="Customer approved site access" checked></apex-checkbox>
-                  </div>
-                </apex-card>
-                <apex-card eyebrow="Recovery" heading="Supervisor checklist">
-                  <apex-stepper [attr.steps]="stepperJson" active-step="2"></apex-stepper>
-                  <apex-alert tone="warning" heading="Harbor audit blocked">
-                    Assign a senior technician before 13:00 or move the arrival promise.
-                  </apex-alert>
-                </apex-card>
-              </section>
             </section>
 
             <section *ngSwitchCase="'/settings'" class="route-page settings-page">
@@ -281,6 +358,18 @@ const routeColumns = [
         </section>
       </div>
 
+      <footer class="site-footer">
+        <div>
+          <strong>Kentro Operations</strong>
+          <span>Angular demo built with ApexUI tokens and Stencil custom elements.</span>
+        </div>
+        <nav aria-label="Footer navigation">
+          <button type="button" (click)="go('/analytics')">Operations</button>
+          <button type="button" (click)="go('/work-orders')">Service request</button>
+          <button type="button" (click)="go('/data-table')">Data grid</button>
+        </nav>
+      </footer>
+
       <nav class="mobile-nav" aria-label="Mobile primary">
         <a *ngFor="let item of navItems" [href]="hrefFor(item.path)" [class.active]="activePath === item.path" (click)="navigate($event, item.path)">
           <apex-icon [attr.name]="item.icon" size="sm"></apex-icon>
@@ -295,12 +384,6 @@ class AppComponent {
   activePath: RoutePath = "/";
   navItems = routes;
 
-  homeMetrics = [
-    { eyebrow: "Capacity", heading: "North loop", value: "92%", copy: "Same-day closeout confidence across staged crews." },
-    { eyebrow: "Readiness", heading: "Parts staged", value: "18", copy: "Critical kits cleared for morning deployment." },
-    { eyebrow: "Risk", heading: "SLA watch", value: "3", copy: "Accounts need supervisor review before 16:00." }
-  ];
-
   dashboardMetrics = [
     { eyebrow: "Today", heading: "Open work", value: "128", label: "Assigned before noon", progress: 76 },
     { eyebrow: "SLA", heading: "Arrival promise", value: "94%", label: "On-time window", progress: 94 },
@@ -308,12 +391,10 @@ class AppComponent {
     { eyebrow: "Revenue", heading: "Protected work", value: "$311K", label: "At-risk value covered", progress: 71 }
   ];
 
-  componentChips = ["AppBar", "Grid", "Cards", "Chart", "DataGrid", "Forms", "Tabs", "Timeline", "TreeView", "EmptyState"];
-
   proofCards = [
     { eyebrow: "Tokens", heading: "Concept theme", copy: "Light and dark modes come from the ApexUI Concept token family.", status: "concept", tone: "info" },
     { eyebrow: "Angular", heading: "Custom elements", copy: "Angular uses CUSTOM_ELEMENTS_SCHEMA with ApexUI Stencil components.", status: "rendering", tone: "success" },
-    { eyebrow: "Product UI", heading: "Real site shape", copy: "Pages model home, analytics, customers, workflows, settings, and about.", status: "routed", tone: "success" }
+    { eyebrow: "Product UI", heading: "Real site shape", copy: "Pages model home, analytics, work orders, customers, data table, settings, and about.", status: "routed", tone: "success" }
   ];
 
   constructor() {
@@ -331,21 +412,57 @@ class AppComponent {
     return JSON.stringify([{ label: "Kentro", href: this.hrefFor("/") }, { label: active.label }]);
   }
 
-  coverageChartJson = JSON.stringify([
-    { label: "North", value: 92 },
-    { label: "Central", value: 78 },
-    { label: "South", value: 84 },
-    { label: "Harbor", value: 66 }
+  get activeLabel(): string {
+    return (this.navItems.find((item) => item.path === this.activePath) ?? this.navItems[0]).label;
+  }
+
+  serviceMixChartJson = JSON.stringify([
+    { label: "Maintenance", value: 86 },
+    { label: "Emergency", value: 34 },
+    { label: "Install", value: 52 },
+    { label: "Audit", value: 69 }
   ]);
 
-  revenueChartJson = JSON.stringify([
-    { label: "Renewal", value: 88 },
-    { label: "Expansion", value: 76 },
-    { label: "Recovery", value: 61 }
+  dispatchChartJson = JSON.stringify([
+    { label: "Mon", value: 72 },
+    { label: "Tue", value: 84 },
+    { label: "Wed", value: 91 },
+    { label: "Thu", value: 78 },
+    { label: "Fri", value: 88 }
+  ]);
+
+  coverageChartJson = JSON.stringify([
+    { label: "North Loop", value: 86 },
+    { label: "Lakeview", value: 64 },
+    { label: "West Yard", value: 73 },
+    { label: "South Bay", value: 58 }
+  ]);
+
+  riskChartJson = JSON.stringify([
+    { label: "Parts hold", value: 42 },
+    { label: "Crew delay", value: 28 },
+    { label: "Customer approval", value: 18 },
+    { label: "Weather", value: 12 }
+  ]);
+
+  healthChartJson = JSON.stringify([
+    { label: "Enterprise", value: 94 },
+    { label: "Priority", value: 87 },
+    { label: "Preventive", value: 91 },
+    { label: "At risk", value: 38 }
+  ]);
+
+  crewChartJson = JSON.stringify([
+    { label: "Crew A", value: 92 },
+    { label: "Crew B", value: 76 },
+    { label: "Crew C", value: 88 },
+    { label: "Crew D", value: 81 }
   ]);
 
   routeColumnsJson = JSON.stringify(routeColumns);
   routeRowsJson = JSON.stringify(routeRows);
+  serviceRecordColumnsJson = JSON.stringify(serviceRecordColumns);
+  serviceRecordRowsJson = JSON.stringify(serviceRecordRows);
 
   customerColumnsJson = JSON.stringify([
     { key: "account", header: "Account", sortable: true, filterable: true },
@@ -361,12 +478,6 @@ class AppComponent {
     { account: "HarborWorks Transit", region: "East", stage: "Expansion", value: "$680K", owner: "Iris Patel" },
     { account: "Summit Cold Storage", region: "Central", stage: "Qualified", value: "$140K", owner: "Jon Bell" },
     { account: "Northline Clinics", region: "South", stage: "Risk review", value: "$310K", owner: "Noor Ellis" }
-  ]);
-
-  timelineJson = JSON.stringify([
-    { label: "Capacity lock", description: "Duty manager confirms coverage gaps and protected sites.", meta: "07:45" },
-    { label: "Parts desk", description: "Critical kits move from review to staged.", meta: "08:20" },
-    { label: "Customer watch", description: "Renewal accounts with open work receive recovery owners.", meta: "09:05" }
   ]);
 
   accountTimelineJson = JSON.stringify([
@@ -388,11 +499,10 @@ class AppComponent {
     { label: "Critical", value: "critical" }
   ]);
 
-  stepperJson = JSON.stringify([
-    { label: "Intake", description: "Request captured" },
-    { label: "Dispatch", description: "Crew assigned" },
-    { label: "Recovery", description: "Supervisor review" },
-    { label: "Closeout", description: "Customer proof" }
+  serviceTypeOptionsJson = JSON.stringify([
+    { label: "Preventive maintenance", value: "maintenance" },
+    { label: "Emergency repair", value: "emergency" },
+    { label: "Installation", value: "install" }
   ]);
 
   settingsTabsJson = JSON.stringify([
@@ -416,7 +526,7 @@ class AppComponent {
   landingOptionsJson = JSON.stringify([
     { label: "Analytics", value: "analytics" },
     { label: "Customers", value: "customers" },
-    { label: "Workflows", value: "workflows" }
+    { label: "Work orders", value: "work-orders" }
   ]);
 
   treeJson = JSON.stringify([
@@ -427,7 +537,7 @@ class AppComponent {
         { id: "atoms", label: "Atoms: Icon, Badge, Button, Chip, Avatar" },
         { id: "molecules", label: "Molecules: SearchForm, Toolbar, Tabs, Stepper" },
         { id: "organisms", label: "Organisms: DataGrid, WorkflowBoard, Chart" },
-        { id: "pages", label: "Pages: Home, Analytics, Customers, Workflows, Settings, About" }
+        { id: "pages", label: "Pages: Home, Analytics, Work orders, Customers, Data table, Settings, About" }
       ]
     }
   ]);
@@ -442,6 +552,10 @@ class AppComponent {
 
   navigate(event: Event, path: RoutePath): void {
     event.preventDefault();
+    this.setRoute(path, "push");
+  }
+
+  go(path: RoutePath): void {
     this.setRoute(path, "push");
   }
 
@@ -489,10 +603,13 @@ function normalizeRoute(path: string): RoutePath | null {
       return "/";
     case "analytics":
       return "/analytics";
+    case "work-orders":
+    case "workflows":
+      return "/work-orders";
     case "customers":
       return "/customers";
-    case "workflows":
-      return "/workflows";
+    case "data-table":
+      return "/data-table";
     case "settings":
       return "/settings";
     case "about":
