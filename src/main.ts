@@ -337,9 +337,9 @@ class AppComponent {
   ]);
 
   revenueChartJson = JSON.stringify([
-    { label: "Renewal", value: 144 },
-    { label: "Expansion", value: 96 },
-    { label: "Recovery", value: 71 }
+    { label: "Renewal", value: 88 },
+    { label: "Expansion", value: 76 },
+    { label: "Recovery", value: 61 }
   ]);
 
   routeColumnsJson = JSON.stringify(routeColumns);
