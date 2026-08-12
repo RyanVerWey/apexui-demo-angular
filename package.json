@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "ng serve --host 127.0.0.1",
-    "build": "ng build --base-href /apexui-demo-angular/"
+    "build": "ng build --base-href /apexui-demo-angular/ && node scripts/copy-spa-fallback.mjs"
   },
   "dependencies": {
     "@angular/build": "^22.1.3",

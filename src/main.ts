@@ -18,6 +18,8 @@ const routes: Array<{ path: RoutePath; label: string; icon: string; title: strin
   { path: "/about", label: "About", icon: "info", title: "About" }
 ];
 
+const deploymentBaseSegment = "apexui-demo-angular";
+
 const routeRows = [
   { route: "North loop", owner: "Maya Chen", status: "Ready", risk: "Low", revenue: "$84K", sla: "96%" },
   { route: "Central relay", owner: "Owen Vale", status: "Review", risk: "Medium", revenue: "$61K", sla: "89%" },
@@ -59,7 +61,7 @@ const routeColumns = [
             </div>
           </div>
           <nav>
-            <a *ngFor="let item of navItems" [href]="hashFor(item.path)" [class.active]="activePath === item.path">
+            <a *ngFor="let item of navItems" [href]="hrefFor(item.path)" [class.active]="activePath === item.path" (click)="navigate($event, item.path)">
               <apex-icon [attr.name]="item.icon" size="sm"></apex-icon>
               <span>{{ item.label }}</span>
             </a>
@@ -81,8 +83,8 @@ const routeColumns = [
                     <apex-typography id="home-title" as="h1" variant="display">Kentro operations desk</apex-typography>
                     <p>Plan field capacity, monitor customer commitments, and recover risky work before the day slips.</p>
                     <div class="button-row">
-                      <a class="action-link primary" href="#/analytics">Open analytics</a>
-                      <a class="action-link secondary" href="#/workflows">Review workflows</a>
+                      <a class="action-link primary" [href]="hrefFor('/analytics')" (click)="navigate($event, '/analytics')">Open analytics</a>
+                      <a class="action-link secondary" [href]="hrefFor('/workflows')" (click)="navigate($event, '/workflows')">Review workflows</a>
                     </div>
                   </apex-stack>
                 </div>
@@ -280,7 +282,7 @@ const routeColumns = [
       </div>
 
       <nav class="mobile-nav" aria-label="Mobile primary">
-        <a *ngFor="let item of navItems" [href]="hashFor(item.path)" [class.active]="activePath === item.path">
+        <a *ngFor="let item of navItems" [href]="hrefFor(item.path)" [class.active]="activePath === item.path" (click)="navigate($event, item.path)">
           <apex-icon [attr.name]="item.icon" size="sm"></apex-icon>
           <span>{{ item.label }}</span>
         </a>
@@ -315,6 +317,7 @@ class AppComponent {
   ];
 
   constructor() {
+    window.addEventListener("popstate", () => this.syncRoute());
     window.addEventListener("hashchange", () => this.syncRoute());
     this.syncRoute();
   }
@@ -325,7 +328,7 @@ class AppComponent {
 
   get breadcrumbsJson(): string {
     const active = this.navItems.find((item) => item.path === this.activePath) ?? this.navItems[0];
-    return JSON.stringify([{ label: "Kentro", href: "#/" }, { label: active.label }]);
+    return JSON.stringify([{ label: "Kentro", href: this.hrefFor("/") }, { label: active.label }]);
   }
 
   coverageChartJson = JSON.stringify([
@@ -433,19 +436,69 @@ class AppComponent {
     this.isDark = Boolean((event as SwitchEvent).detail?.checked);
   }
 
-  hashFor(path: RoutePath): string {
-    return `#${path}`;
+  hrefFor(path: RoutePath): string {
+    return `${this.basePath()}${path === "/" ? "/" : path}${window.location.search}`;
+  }
+
+  navigate(event: Event, path: RoutePath): void {
+    event.preventDefault();
+    this.setRoute(path, "push");
   }
 
   private syncRoute(): void {
-    const hashPath = (window.location.hash.replace(/^#/, "") || "/") as RoutePath;
-    this.activePath = routes.some((route) => route.path === hashPath) ? hashPath : "/";
-    if (hashPath !== this.activePath) {
-      window.location.hash = this.activePath;
-    }
+    const route = this.routeFromLocation();
+    this.setRoute(route.path, route.shouldReplace ? "replace" : "none");
+  }
+
+  private setRoute(path: RoutePath, mode: "none" | "push" | "replace"): void {
+    this.activePath = path;
 
     const active = routes.find((route) => route.path === this.activePath) ?? routes[0];
     document.title = active.path === "/" ? "Kentro | ApexUI Angular Demo" : `${active.title} | Kentro`;
+
+    if (mode !== "none") {
+      window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", this.hrefFor(path));
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+  }
+
+  private routeFromLocation(): { path: RoutePath; shouldReplace: boolean } {
+    const hashPath = normalizeRoute(window.location.hash.replace(/^#/, ""));
+    if (hashPath) {
+      return { path: hashPath, shouldReplace: true };
+    }
+
+    const segments = window.location.pathname.split("/").filter(Boolean);
+    const routeSegment = segments[0] === deploymentBaseSegment ? segments[1] ?? "" : segments[0] ?? "";
+    const normalizedPath = normalizeRoute(routeSegment);
+    return { path: normalizedPath ?? "/", shouldReplace: normalizedPath === null };
+  }
+
+  private basePath(): string {
+    const segments = window.location.pathname.split("/").filter(Boolean);
+    return segments[0] === deploymentBaseSegment ? `/${deploymentBaseSegment}` : "";
+  }
+}
+
+function normalizeRoute(path: string): RoutePath | null {
+  const [pathname] = path.split(/[?#]/);
+  const normalized = pathname.replace(/^\/+|\/+$/g, "");
+
+  switch (normalized) {
+    case "":
+      return "/";
+    case "analytics":
+      return "/analytics";
+    case "customers":
+      return "/customers";
+    case "workflows":
+      return "/workflows";
+    case "settings":
+      return "/settings";
+    case "about":
+      return "/about";
+    default:
+      return null;
   }
 }
 
