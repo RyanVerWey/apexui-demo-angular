@@ -3,5 +3,8 @@
 Public GitHub Pages demo for ApexUI in Angular.
 
 This app uses `@apexui/web-components` custom elements with Angular `CUSTOM_ELEMENTS_SCHEMA`.
-`@apexui/angular@0.1.0` currently exports `dist/index.js`, but the installed package does not ship a
-`dist/` folder, so direct wrapper imports are blocked until that package is republished.
+It demonstrates the ApexUI Concept token family, `apex-grid`, cards, charting, and DataGrid behavior
+inside a focused Angular product mockup.
+
+Until `@apexui/*@0.1.1` is published to npm, this demo installs the verified ApexUI package tarballs
+from `vendor/apexui/` so GitHub Pages can deploy the current token and component set.
