@@ -106,9 +106,21 @@ const serviceRecordColumns = [
                   <apex-stack gap="md">
                     <apex-chart label="Service mix" [attr.data]="serviceMixChartJson"></apex-chart>
                     <div class="metric-band">
-                      <article class="metric-card"><span>Open orders</span><strong>128</strong></article>
-                      <article class="metric-card"><span>First-time fix</span><strong>94%</strong></article>
-                      <article class="metric-card"><span>At-risk sites</span><strong>7</strong></article>
+                      <article class="metric-card">
+                        <span>Open orders</span>
+                        <strong>128</strong>
+                        <apex-progress label="Ready to dispatch" value="82"></apex-progress>
+                      </article>
+                      <article class="metric-card">
+                        <span>First-time fix</span>
+                        <strong>94%</strong>
+                        <apex-progress label="Quality trend" value="94"></apex-progress>
+                      </article>
+                      <article class="metric-card">
+                        <span>At-risk sites</span>
+                        <strong>7</strong>
+                        <apex-progress label="Risk contained" value="38"></apex-progress>
+                      </article>
                     </div>
                   </apex-stack>
                 </apex-card>

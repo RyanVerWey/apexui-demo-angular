@@ -55,6 +55,7 @@ p {
   padding: var(--apex-space-4) clamp(var(--apex-space-4), 5vw, var(--apex-space-8));
   border-bottom: 1px solid var(--apex-color-border);
   background: color-mix(in srgb, var(--apex-color-surface) 92%, var(--apex-color-canvas));
+  backdrop-filter: blur(16px);
 }
 
 .brand-lockup,
@@ -75,6 +76,7 @@ p {
   gap: var(--apex-space-3);
   color: var(--apex-color-text);
   text-decoration: none;
+  transition: transform var(--apex-motion-fast) ease;
 }
 
 .brand-lockup strong,
@@ -124,6 +126,10 @@ p {
   font-weight: var(--apex-font-weight-bold);
   text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color var(--apex-motion-fast) ease,
+    color var(--apex-motion-fast) ease,
+    transform var(--apex-motion-fast) ease;
 }
 
 .nav-link {
@@ -136,6 +142,14 @@ p {
 .site-footer button:hover {
   background: var(--apex-color-subtle);
   color: var(--apex-color-text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brand-lockup:hover,
+  .nav-link:hover,
+  .site-footer button:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .action-link {
@@ -151,7 +165,15 @@ p {
   transition:
     background var(--apex-motion-normal) ease,
     border-color var(--apex-motion-normal) ease,
-    color var(--apex-motion-normal) ease;
+    color var(--apex-motion-normal) ease,
+    box-shadow var(--apex-motion-normal) ease,
+    transform var(--apex-motion-normal) ease;
+}
+
+.action-link:hover {
+  border-color: var(--apex-color-accent);
+  box-shadow: var(--apex-shadow-sm);
+  transform: translateY(-1px);
 }
 
 .action-link.primary,
@@ -193,8 +215,8 @@ p {
 
 .hero-page {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(420px, 0.88fr);
-  gap: clamp(var(--apex-space-7), 6vw, var(--apex-space-12));
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 0.88fr);
+  gap: clamp(var(--apex-space-6), 6vw, var(--apex-space-12));
   align-items: center;
   min-height: 34rem;
 }
@@ -244,6 +266,16 @@ p {
 
 .trust-band strong {
   color: var(--apex-color-text);
+  transition:
+    color var(--apex-motion-fast) ease,
+    transform var(--apex-motion-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trust-band strong:hover {
+    color: var(--apex-color-accent);
+    transform: translateY(-1px);
+  }
 }
 
 .story-grid,
@@ -284,6 +316,18 @@ p {
   border: 1px solid var(--apex-color-border);
   border-radius: var(--apex-radius-md);
   background: var(--apex-color-surface);
+  transition:
+    border-color var(--apex-motion-fast) ease,
+    box-shadow var(--apex-motion-fast) ease,
+    transform var(--apex-motion-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .metric-card:hover {
+    border-color: color-mix(in srgb, var(--apex-color-accent) 42%, var(--apex-color-border));
+    box-shadow: var(--apex-shadow-md);
+    transform: translateY(-2px);
+  }
 }
 
 .metric-card span {
@@ -306,6 +350,10 @@ p {
   display: block;
   margin-bottom: var(--apex-space-2);
   font-size: var(--apex-font-size-2xl);
+}
+
+.metric-card apex-progress {
+  margin-top: var(--apex-space-2);
 }
 
 .split-grid,
@@ -552,5 +600,25 @@ apex-data-grid {
 
   .action-link {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-lockup,
+  .nav-link,
+  .site-footer button,
+  .action-link,
+  .trust-band strong,
+  .metric-card {
+    transition: none;
+  }
+
+  .brand-lockup:hover,
+  .nav-link:hover,
+  .site-footer button:hover,
+  .action-link:hover,
+  .trust-band strong:hover,
+  .metric-card:hover {
+    transform: none;
   }
 }
