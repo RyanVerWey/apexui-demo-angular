@@ -13,6 +13,13 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "."
+                }
+              ],
               "styles": [
                 "node_modules/@apexui/tokens/dist/tokens.css",
                 "src/styles.css"

@@ -91,14 +91,20 @@ p {
 }
 
 .brand-mark {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3.5rem;
+  height: 2.5rem;
   justify-content: center;
-  border: 1px solid var(--apex-color-border);
-  border-radius: var(--apex-radius-md);
-  background: var(--apex-color-accent);
-  color: var(--apex-color-on-accent);
-  box-shadow: 0 10px 22px color-mix(in srgb, var(--apex-color-accent) 22%, transparent);
+  color: var(--apex-color-text);
+}
+
+.brand-mark img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.site-shell[data-apex-theme$="-dark"] .brand-mark img {
+  filter: invert(1) brightness(1.08);
 }
 
 .primary-nav,

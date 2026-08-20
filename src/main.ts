@@ -10,7 +10,7 @@ type RoutePath = "/" | "/analytics" | "/work-orders" | "/customers" | "/data-tab
 type SwitchEvent = CustomEvent<{ checked: boolean }>;
 
 const routes: Array<{ path: RoutePath; label: string; icon: string; title: string }> = [
-  { path: "/", label: "Home", icon: "home", title: "Kentro" },
+  { path: "/", label: "Home", icon: "home", title: "CorvaUI" },
   { path: "/analytics", label: "Analytics", icon: "bar-chart-3", title: "Analytics" },
   { path: "/work-orders", label: "Work orders", icon: "clipboard-list", title: "Work orders" },
   { path: "/customers", label: "Customers", icon: "users", title: "Customers" },
@@ -64,10 +64,10 @@ const serviceRecordColumns = [
   template: `
     <main class="site-shell" [attr.data-apex-theme]="theme">
       <header class="site-header">
-        <a class="brand-lockup" [href]="hrefFor('/')" (click)="navigate($event, '/')" aria-label="Kentro home">
-          <span class="brand-mark"><apex-icon name="navigation" size="sm"></apex-icon></span>
+        <a class="brand-lockup" [href]="hrefFor('/')" (click)="navigate($event, '/')" aria-label="CorvaUI Angular demo home">
+          <span class="brand-mark" aria-hidden="true"><img [attr.src]="assetHref('corvaui-raven-mark.svg')" alt="" /></span>
           <span>
-            <strong>Kentro</strong>
+            <strong>CorvaUI</strong>
             <small>Operations</small>
           </span>
         </a>
@@ -95,14 +95,14 @@ const serviceRecordColumns = [
                 <div class="hero-copy">
                   <apex-stack gap="lg">
                     <apex-typography id="home-title" as="h1" variant="display">Field service that feels calm before the crew arrives.</apex-typography>
-                    <p>Kentro coordinates commercial maintenance, emergency dispatch, customer approvals, and executive reporting from one operating system.</p>
+                    <p>CorvaUI coordinates commercial maintenance, emergency dispatch, customer approvals, and executive reporting from one operating system.</p>
                     <div class="button-row">
                       <a class="action-link primary" [href]="hrefFor('/work-orders')" (click)="navigate($event, '/work-orders')">Book a service visit</a>
                       <a class="action-link secondary" [href]="hrefFor('/analytics')" (click)="navigate($event, '/analytics')">View live metrics</a>
                     </div>
                   </apex-stack>
                 </div>
-                <apex-card eyebrow="Today at Kentro" heading="Readiness snapshot">
+                <apex-card eyebrow="Today at CorvaUI" heading="Readiness snapshot">
                   <apex-stack gap="md">
                     <apex-chart label="Service mix" [attr.data]="serviceMixChartJson"></apex-chart>
                     <div class="metric-band">
@@ -141,7 +141,7 @@ const serviceRecordColumns = [
                 <apex-card eyebrow="Operations" heading="Managers see the route plan before it breaks">
                   <p>Dashboards combine work orders, crew load, SLA risk, and account health in one operations surface.</p>
                 </apex-card>
-                <apex-card eyebrow="Proof" heading="Every page exercises ApexUI in context">
+                <apex-card eyebrow="Proof" heading="Every page exercises CorvaUI in context">
                   <p>Marketing, metrics, forms, records, settings, and package proof share the same token system.</p>
                 </apex-card>
               </section>
@@ -247,7 +247,7 @@ const serviceRecordColumns = [
             <section *ngSwitchCase="'/data-table'" class="route-page data-table-page">
               <header class="page-heading">
                 <apex-typography as="h1" variant="display">Service records data table</apex-typography>
-                <p>A routed data-table page proving ApexUI DataGrid sorting, filtering, and paging in Angular.</p>
+                <p>A routed data-table page proving CorvaUI DataGrid sorting, filtering, and paging in Angular.</p>
               </header>
 
               <apex-toolbar label="Data table controls" density="comfortable" wrap>
@@ -277,7 +277,7 @@ const serviceRecordColumns = [
                     </ul>
                   </apex-card>
                   <apex-card eyebrow="Package" heading="Angular custom elements">
-                    <p>This page uses ApexUI Stencil components through Angular CUSTOM_ELEMENTS_SCHEMA.</p>
+                    <p>This page uses CorvaUI Stencil components through Angular CUSTOM_ELEMENTS_SCHEMA.</p>
                   </apex-card>
                 </div>
               </section>
@@ -327,7 +327,7 @@ const serviceRecordColumns = [
                 <apex-tabs label="Settings sections" [attr.items]="settingsTabsJson" active-id="profile"></apex-tabs>
                 <div class="settings-grid">
                   <apex-text-field label="Display name" value="Ryan Demo Operator"></apex-text-field>
-                  <apex-text-field label="Email" type="email" value="operator@kentro.example"></apex-text-field>
+                  <apex-text-field label="Email" type="email" value="ops@example.com"></apex-text-field>
                   <apex-select label="Locale" [attr.options]="localeOptionsJson" value="en-US"></apex-select>
                   <apex-select label="Timezone" [attr.options]="timezoneOptionsJson" value="america-new-york"></apex-select>
                   <apex-switch label="Notify on critical reassignment" checked></apex-switch>
@@ -341,8 +341,8 @@ const serviceRecordColumns = [
             <section *ngSwitchCase="'/about'" class="route-page about-page">
               <header class="page-heading">
                 <apex-badge tone="info">About the demo</apex-badge>
-                <apex-typography as="h1" variant="display">Angular plus ApexUI</apex-typography>
-                <p>This mock website uses shipped ApexUI tokens and Stencil custom elements inside Angular, shaped as a real operations product.</p>
+                <apex-typography as="h1" variant="display">Angular plus CorvaUI</apex-typography>
+                <p>This mock website uses shipped CorvaUI tokens and Stencil custom elements inside Angular, shaped as a real operations product.</p>
               </header>
 
               <section class="feature-grid">
@@ -354,7 +354,7 @@ const serviceRecordColumns = [
 
               <section class="split-grid">
                 <apex-card eyebrow="Atomic coverage" heading="Component layers">
-                  <apex-tree-view label="ApexUI layers" [attr.items]="treeJson"></apex-tree-view>
+                  <apex-tree-view label="CorvaUI layers" [attr.items]="treeJson"></apex-tree-view>
                 </apex-card>
                 <apex-card eyebrow="Empty state" heading="No blocked migrations">
                   <apex-empty-state
@@ -372,8 +372,8 @@ const serviceRecordColumns = [
 
       <footer class="site-footer">
         <div>
-          <strong>Kentro Operations</strong>
-          <span>Angular demo built with ApexUI tokens and Stencil custom elements.</span>
+          <strong>CorvaUI Angular</strong>
+          <span>Angular demo built with CorvaUI tokens and Stencil custom elements.</span>
         </div>
         <nav aria-label="Footer navigation">
           <button type="button" (click)="go('/analytics')">Operations</button>
@@ -404,8 +404,8 @@ class AppComponent {
   ];
 
   proofCards = [
-    { eyebrow: "Tokens", heading: "Concept theme", copy: "Light and dark modes come from the ApexUI Concept token family.", status: "concept", tone: "info" },
-    { eyebrow: "Angular", heading: "Custom elements", copy: "Angular uses CUSTOM_ELEMENTS_SCHEMA with ApexUI Stencil components.", status: "rendering", tone: "success" },
+    { eyebrow: "Tokens", heading: "Concept theme", copy: "Light and dark modes come from the CorvaUI Concept token family.", status: "concept", tone: "info" },
+    { eyebrow: "Angular", heading: "Custom elements", copy: "Angular uses CUSTOM_ELEMENTS_SCHEMA with CorvaUI Stencil components.", status: "rendering", tone: "success" },
     { eyebrow: "Product UI", heading: "Real site shape", copy: "Pages model home, analytics, work orders, customers, data table, settings, and about.", status: "routed", tone: "success" }
   ];
 
@@ -421,7 +421,7 @@ class AppComponent {
 
   get breadcrumbsJson(): string {
     const active = this.navItems.find((item) => item.path === this.activePath) ?? this.navItems[0];
-    return JSON.stringify([{ label: "Kentro", href: this.hrefFor("/") }, { label: active.label }]);
+    return JSON.stringify([{ label: "CorvaUI", href: this.hrefFor("/") }, { label: active.label }]);
   }
 
   get activeLabel(): string {
@@ -544,7 +544,7 @@ class AppComponent {
   treeJson = JSON.stringify([
     {
       id: "root",
-      label: "ApexUI demo",
+      label: "CorvaUI demo",
       children: [
         { id: "atoms", label: "Atoms: Icon, Badge, Button, Chip, Avatar" },
         { id: "molecules", label: "Molecules: SearchForm, Toolbar, Tabs, Stepper" },
@@ -560,6 +560,11 @@ class AppComponent {
 
   hrefFor(path: RoutePath): string {
     return `${this.basePath()}${path === "/" ? "/" : path}${window.location.search}`;
+  }
+
+  assetHref(asset: string): string {
+    const base = this.basePath();
+    return `${base ? `${base}/` : "/"}${asset}`;
   }
 
   navigate(event: Event, path: RoutePath): void {
@@ -580,7 +585,7 @@ class AppComponent {
     this.activePath = path;
 
     const active = routes.find((route) => route.path === this.activePath) ?? routes[0];
-    document.title = active.path === "/" ? "Kentro | ApexUI Angular Demo" : `${active.title} | Kentro`;
+    document.title = active.path === "/" ? "CorvaUI Angular Demo" : `${active.title} | CorvaUI`;
 
     if (mode !== "none") {
       window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", this.hrefFor(path));
